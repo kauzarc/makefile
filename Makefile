@@ -1,18 +1,32 @@
+#BY KAUZARC
+#COMPUTER SCIENCE STUDENT
+
+#A MODIFIER EN FONCTION DU BESOIN
+
+#Compilateur
 CC= g++
 
+#Deux dossier doivent etre present dans le meme dossier que le Makefile
+#Un dossier contenant les sources
 SRC_PATH= src
+#Un dossier qui servira a stocker les fichier entre la compilation et le link
 BUILD_PATH= build
 
+#Les extension des fichiers
 SRC_EXT= cpp
 BUILD_EXT= o
 
+#Differentes option de compilation
+#et option de link pour les librairies
 CXXFLAGS= -Wall
 LIB=
 LDFLAGS=
 DSO=
 
+#Le nom de l'executable
 EXEC= app
 
+#NE PAS MODIFIER LA SUITE !
 SRC= $(wildcard $(SRC_PATH)/*.$(SRC_EXT))
 OBJ= $(SRC:$(SRC_PATH)/%.$(SRC_EXT)=$(BUILD_PATH)/%.$(BUILD_EXT))
 
