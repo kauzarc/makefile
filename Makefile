@@ -12,6 +12,9 @@ SRC_PATH= src
 #Un dossier qui servira a stocker les fichier entre la compilation et le link
 BUILD_PATH= build
 
+#Entree de l'aplication
+MAIN= main
+
 #Les extension des fichiers
 SRC_EXT= cpp
 BUILD_EXT= o
@@ -27,13 +30,17 @@ DSO=
 EXEC= app
 
 #NE PAS MODIFIER LA SUITE !
-SRC= $(wildcard $(SRC_PATH)/*.$(SRC_EXT))
-OBJ= $(SRC:$(SRC_PATH)/%.$(SRC_EXT)=$(BUILD_PATH)/%.$(BUILD_EXT))
+SRC:= $(wildcard $(SRC_PATH)/src/*.$(SRC_EXT))
+OBJ:= $(SRC:$(SRC_PATH)/src/%.$(SRC_EXT)=$(BUILD_PATH)/%.$(BUILD_EXT))
+OBJ:= $(OBJ) $(BUILD_PATH)/$(MAIN).$(BUILD_EXT)
 
 all: $(EXEC)
 
 $(EXEC): $(OBJ)
 	$(CC) -o  $@ $(DSO) $^ $(LIB)
+
+$(BUILD_PATH)/%.$(BUILD_EXT): $(SRC_PATH)/src/%.$(SRC_EXT)
+	$(CC) -c $(LDFLAGS) $^ $(CXXFLAGS) -o $@
 
 $(BUILD_PATH)/%.$(BUILD_EXT): $(SRC_PATH)/%.$(SRC_EXT)
 	$(CC) -c $(LDFLAGS) $^ $(CXXFLAGS) -o $@
