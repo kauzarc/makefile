@@ -6,11 +6,13 @@
 
 #include <iostream>
 
-#include "header/exemple.hpp"
+#include "header/exemple1.hpp"
+#include "header/exemple2.hpp"
 
 int main(int argc, char const *argv[])
 {
-    Exemple exemple(2);
+    Exemple1 exemple1(2);
+    Exemple2 exemple2(2.);
     std::cout << "Hello world !" << std::endl;
     return 0;
 }
