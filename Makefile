@@ -52,3 +52,12 @@ $(BUILD_PATH)/%.$(BUILD_EXT): $(SRC_PATH)/%.$(SRC_EXT)
 clean:
 	rm $(BUILD_PATH)/*.$(BUILD_EXT)
 	rm $(EXEC)
+
+
+#Faire "make folder" initialise corectement le projet
+folder:
+	mkdir $(BUILD_PATH)
+	mkdir $(SRC_PATH)
+	mkdir $(SRC_PATH)/$(HEADER_FOLDER)
+	mkdir $(SRC_PATH)/$(SRC_FOLDER)
+	touch $(SRC_PATH)/$(MAIN).$(SRC_EXT)

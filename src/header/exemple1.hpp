@@ -1,5 +1,7 @@
 #pragma once
 
+//Exemple header file
+
 class Exemple1
 {
 private:
