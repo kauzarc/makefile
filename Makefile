@@ -56,7 +56,7 @@ REOBJ:= $(REOBJ) $(BUILD_PATH)/$(RELEASE_FOLDER)/$(MAIN).$(BUILD_EXT)
 all: debug
 
 #Release rules
-debug: prep $(DBEXEC) dbgmove
+debug: prep $(DBEXEC) dbgcp
 
 $(DBEXEC): $(DBOBJ)
 	$(CC) -o $@ $(LDFLAGS) $(DBGCFLAGS) $^
@@ -67,11 +67,11 @@ $(BUILD_PATH)/$(DEBUG_FOLDER)/%.$(BUILD_EXT): $(SRC_PATH)/$(SRC_FOLDER)/%.$(SRC_
 $(BUILD_PATH)/$(DEBUG_FOLDER)/%.$(BUILD_EXT): $(SRC_PATH)/%.$(SRC_EXT)
 	$(CC) -c $^ $(CXXFLAGS) $(DBGCFLAGS) -o $@
 
-dbgmove:
-	mv $(DBEXEC) $(EXEC)
+dbgcp:
+	cp $(DBEXEC) $(EXEC)
 
 #Debug rules
-release:prep $(REEXEC) relmove
+release:prep $(REEXEC) relcp
 
 $(REEXEC): $(REOBJ)
 	$(CC) -o $@ $(LDFLAGS) $(RELCFLAGS) $^
@@ -82,8 +82,8 @@ $(BUILD_PATH)/$(RELEASE_FOLDER)/%.$(BUILD_EXT): $(SRC_PATH)/$(SRC_FOLDER)/%.$(SR
 $(BUILD_PATH)/$(RELEASE_FOLDER)/%.$(BUILD_EXT): $(SRC_PATH)/%.$(SRC_EXT)
 	$(CC) -c $^ $(CXXFLAGS) $(RELCFLAGS) -o $@
 
-relmove:
-	mv $(REEXEC) $(EXEC)
+relcp:
+	cp $(REEXEC) $(EXEC)
 
 #Clean
 clean:
