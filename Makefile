@@ -4,60 +4,100 @@
 #A MODIFIER EN FONCTION DU BESOIN
 
 #Compilateur
-CC= g++
+CC = g++
 
 #Deux dossier doivent etre present dans le meme dossier que le Makefile
 #Un dossier contenant les sources
-SRC_PATH= src
-#Un dossier qui servira a stocker les fichier entre la compilation et le link
-BUILD_PATH= build
-
+SRC_PATH = src
 #Nom des dossier des sources et des header
-SRC_FOLDER= src
+SRC_FOLDER = src
 HEADER_FOLDER = header
 
+#Un dossier qui servira a stocker les fichier entre la compilation et le link
+BUILD_PATH = build
+
 #Entree de l'aplication
-MAIN= main
+MAIN = main
 
 #Les extension des fichiers
-SRC_EXT= cpp
-BUILD_EXT= o
+SRC_EXT = cpp
+BUILD_EXT = o
 
 #Differentes option de compilation
 #et option de link pour les librairies
-CXXFLAGS= -Wall
-LIB=
-LDFLAGS=
-DSO=
+CXXFLAGS = -Wall -Wextra
+LDFLAGS =
 
 #Le nom de l'executable
-EXEC= app
+EXEC = app
 
+#Debug option
+DEBUG_FOLDER = debug
+DBGCFLAGS = -g -O0 -DDEBUG
+
+#Release option
+RELEASE_FOLDER = release
+RELCFLAGS = -O2 -DNDEBUG
+
+#################################################################
 #NE PAS MODIFIER LA SUITE !
+#################################################################
+
 SRC:= $(wildcard $(SRC_PATH)/$(SRC_FOLDER)/*.$(SRC_EXT))
-OBJ:= $(SRC:$(SRC_PATH)/$(SRC_FOLDER)/%.$(SRC_EXT)=$(BUILD_PATH)/%.$(BUILD_EXT))
-OBJ:= $(OBJ) $(BUILD_PATH)/$(MAIN).$(BUILD_EXT)
 
-all: $(EXEC)
+DBEXEC = $(BUILD_PATH)/$(DEBUG_FOLDER)/$(EXEC)
+DBOBJ:= $(SRC:$(SRC_PATH)/$(SRC_FOLDER)/%.$(SRC_EXT)=$(BUILD_PATH)/$(DEBUG_FOLDER)/%.$(BUILD_EXT))
+DBOBJ:= $(DBOBJ) $(BUILD_PATH)/$(DEBUG_FOLDER)/$(MAIN).$(BUILD_EXT)
 
-$(EXEC): $(OBJ)
-	$(CC) -o  $@ $(DSO) $^ $(LIB)
+REEXEC = $(BUILD_PATH)/$(RELEASE_FOLDER)/$(EXEC)
+REOBJ:= $(SRC:$(SRC_PATH)/$(SRC_FOLDER)/%.$(SRC_EXT)=$(BUILD_PATH)/$(RELEASE_FOLDER)/%.$(BUILD_EXT))
+REOBJ:= $(REOBJ) $(BUILD_PATH)/$(RELEASE_FOLDER)/$(MAIN).$(BUILD_EXT)
 
-$(BUILD_PATH)/%.$(BUILD_EXT): $(SRC_PATH)/$(SRC_FOLDER)/%.$(SRC_EXT)
-	$(CC) -c $(LDFLAGS) $^ $(CXXFLAGS) -o $@
+all: debug
 
-$(BUILD_PATH)/%.$(BUILD_EXT): $(SRC_PATH)/%.$(SRC_EXT)
-	$(CC) -c $(LDFLAGS) $^ $(CXXFLAGS) -o $@
+#Release rules
+debug: prep $(DBEXEC) dbgmove
 
+$(DBEXEC): $(DBOBJ)
+	$(CC) -o $@ $(LDFLAGS) $(DBGCFLAGS) $^
+
+$(BUILD_PATH)/$(DEBUG_FOLDER)/%.$(BUILD_EXT): $(SRC_PATH)/$(SRC_FOLDER)/%.$(SRC_EXT)
+	$(CC) -c $^ $(CXXFLAGS) $(DBGCFLAGS) -o $@
+
+$(BUILD_PATH)/$(DEBUG_FOLDER)/%.$(BUILD_EXT): $(SRC_PATH)/%.$(SRC_EXT)
+	$(CC) -c $^ $(CXXFLAGS) $(DBGCFLAGS) -o $@
+
+dbgmove:
+	mv $(DBEXEC) $(EXEC)
+
+#Debug rules
+release:prep $(REEXEC) relmove
+
+$(REEXEC): $(REOBJ)
+	$(CC) -o $@ $(LDFLAGS) $(RELCFLAGS) $^
+
+$(BUILD_PATH)/$(RELEASE_FOLDER)/%.$(BUILD_EXT): $(SRC_PATH)/$(SRC_FOLDER)/%.$(SRC_EXT)
+	$(CC) -c $^ $(CXXFLAGS) $(RELCFLAGS) -o $@
+
+$(BUILD_PATH)/$(RELEASE_FOLDER)/%.$(BUILD_EXT): $(SRC_PATH)/%.$(SRC_EXT)
+	$(CC) -c $^ $(CXXFLAGS) $(RELCFLAGS) -o $@
+
+relmove:
+	mv $(REEXEC) $(EXEC)
+
+#Clean
 clean:
-	rm $(BUILD_PATH)/*.$(BUILD_EXT)
-	rm $(EXEC)
+	rm -f $(BUILD_PATH)/$(DEBUG_FOLDER)/*.$(BUILD_EXT) $(BUILD_PATH)/$(RELEASE_FOLDER)/*.$(BUILD_EXT) $(EXEC)
 
+prep:
+	mkdir -p $(BUILD_PATH) $(BUILD_PATH)/$(RELEASE_FOLDER) $(BUILD_PATH)/$(DEBUG_FOLDER)
+
+#Remake
+remake: clean all
 
 #Faire "make folder" initialise corectement le projet
 folder:
-	mkdir $(BUILD_PATH)
-	mkdir $(SRC_PATH)
-	mkdir $(SRC_PATH)/$(HEADER_FOLDER)
-	mkdir $(SRC_PATH)/$(SRC_FOLDER)
+	mkdir $(BUILD_PATH) $(BUILD_PATH)/$(RELEASE_FOLDER) $(BUILD_PATH)/$(DEBUG_FOLDER)
+	mkdir $(SRC_PATH) $(SRC_PATH)/$(HEADER_FOLDER) $(SRC_PATH)/$(SRC_FOLDER)
 	touch $(SRC_PATH)/$(MAIN).$(SRC_EXT)
+	echo $$'#include <iostream>\n\nint main()\n{\n    std::cout << "Hello world !" << std::endl;\n}' > $(SRC_PATH)/$(MAIN).$(SRC_EXT)
