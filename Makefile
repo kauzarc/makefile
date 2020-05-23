@@ -25,7 +25,7 @@ BUILD_EXT = o
 
 #Differentes option de compilation
 #et option de link pour les librairies
-CXXFLAGS = -Wall -Wextra
+CXXFLAGS = -Wall -Wextra -std=c++17
 LDFLAGS =
 
 #Le nom de l'executable
