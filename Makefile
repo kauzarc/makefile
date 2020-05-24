@@ -100,4 +100,4 @@ folder:
 	mkdir $(BUILD_PATH) $(BUILD_PATH)/$(RELEASE_FOLDER) $(BUILD_PATH)/$(DEBUG_FOLDER)
 	mkdir $(SRC_PATH) $(SRC_PATH)/$(HEADER_FOLDER) $(SRC_PATH)/$(SRC_FOLDER)
 	touch $(SRC_PATH)/$(MAIN).$(SRC_EXT)
-	echo $$'#include <iostream>\n\nint main()\n{\n    std::cout << "Hello world !" << std::endl;\n}' > $(SRC_PATH)/$(MAIN).$(SRC_EXT)
+	echo $$'#include <iostream>\n\nint main()\n{\n    std::cout << "Hello world !" << std::endl;\nreturn 0;\n}' > $(SRC_PATH)/$(MAIN).$(SRC_EXT)
